@@ -4,6 +4,8 @@ body {
   background-color: rgb(230, 230, 230);
   font-family: sans-serif;
 }
+
+
 #controls {
   position: fixed;
   bottom: 0;
@@ -19,18 +21,14 @@ body {
   backdrop-filter: blur(5px);
 }
 #controls > * {
+  user-select: none;
+  -webkit-user-select: none;
   padding: 14px 18px;
   font-size: 2rem;
   flex-shrink: 0;
 }
 #canvas {
-  /*width: 5000px;*/
-  /*height: 5000px;*/
-  /*position: relative;*/
-  /*touch-action: none;*/
-  /*transform-origin: center center;*/
-  /*!*background-image: linear-gradient(#ccc 1px, transparent 1px), linear-gradient(90deg, #ccc 1px, transparent 1px);*!*/
-  /*!*background-size: 50px 50px;*!*/
+ 
 }
 .image-wrapper {
   position: absolute;
@@ -42,18 +40,10 @@ body {
   max-width: 100%;
   max-height: 100%;
   pointer-events: none;
-  user-select: none;
+  user-select:none;
+
 }
-.context-menu {
-  position: absolute;
-  background: white;
-  border: 1px solid #ccc;
-  padding: 6px 10px;
-  border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  z-index: 100;
-  font-size: 16px;
-}
+
 @media (max-width: 768px) {
   #controls {
     flex-direction: row;
@@ -65,5 +55,9 @@ body {
     flex: 1 1 40%;
     font-size: 16px;
     padding: 14px;
+
   }
 }
+
+
+

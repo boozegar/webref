@@ -1,13 +1,14 @@
 import './style.css'
 import interact from 'interactjs'
 
+
 const canvas = document.getElementById('canvas');
 const fileInput = document.getElementById('fileInput');
 const flipAllBtn = document.getElementById('flipAll');
 const grayscaleBtn = document.getElementById('toggleGrayscale');
 const resetCanvasBtn = document.getElementById('resetCanvas');
 
-let allFlipped = true;
+let allFlipped = false;
 let allGrayscale = false;
 const imageStates = new WeakMap();
 
@@ -18,6 +19,11 @@ function applyTransform(wrapper, state) {
     img.style.filter = state.grayscale ? 'grayscale(100%)' : 'none';
 }
 
+function showMenu(wrapper, state){
+    alert(state)
+}
+
+
 
 fileInput.addEventListener('change', (e) => {
     for (const file of e.target.files) {
@@ -27,6 +33,7 @@ fileInput.addEventListener('change', (e) => {
             wrapper.classList.add('image-wrapper');
             const img = document.createElement('img');
             img.src = evt.target.result;
+            img.addEventListener('touchstart', e => e.preventDefault(), {passive: false}); // 阻止长按行为
             wrapper.appendChild(img);
             canvas.appendChild(wrapper);
 
@@ -62,7 +69,11 @@ fileInput.addEventListener('change', (e) => {
                             applyTransform(target, s);
                         }
                     }
-                });
+                }).on('hold', function (event) {
+                const target = event.target;
+                const s = imageStates.get(target);
+                showMenu(wrapper, s);
+            })
 
 
         };
@@ -101,9 +112,12 @@ interact(canvas).gesturable({
         },
         move(event) {
             if (scaleCanvas) {
-                canvasScale *= (1 + event.ds);
-                canvasScale = Math.max(0.5, Math.min(3, canvasScale));
-                canvas.style.transform = `translate(${canvasOffset.x}px, ${canvasOffset.y}px) scale(${canvasScale})`;
+                document.querySelectorAll('.image-wrapper').forEach(wrapper => {
+                    const s = imageStates.get(wrapper);
+                    s.scale *= (1 + event.ds);
+                    s.scale = Math.max(0.5, Math.min(3, s.scale));
+                    applyTransform(wrapper, s);
+                });
             }
         },
         end() {
@@ -148,25 +162,10 @@ resetCanvasBtn.addEventListener('click', () => {
         maxY = Math.max(maxY, y + height);
     });
 
-    const canvasRect = canvas.getBoundingClientRect();
-    const viewWidth = window.innerWidth;
-    const viewHeight = window.innerHeight - document.getElementById('controls').offsetHeight;
-
-    const contentWidth = maxX - minX;
-    const contentHeight = maxY - minY;
-
-    const scaleX = viewWidth / contentWidth;
-    const scaleY = viewHeight / contentHeight;
-    canvasScale = Math.min(scaleX, scaleY, 1);
-
-    const offsetX = (viewWidth - contentWidth * canvasScale) / 2 - minX * canvasScale;
-    const offsetY = (viewHeight - contentHeight * canvasScale) / 2 - minY * canvasScale;
-
-    canvasOffset = {x: offsetX, y: offsetY};
-    canvas.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${canvasScale})`;
 });
 
 
 document.addEventListener('gesturestart', e => e.preventDefault());
 document.addEventListener('gesturechange', e => e.preventDefault());
 document.addEventListener('gestureend', e => e.preventDefault());
+
