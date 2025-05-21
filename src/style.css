@@ -1,3 +1,7 @@
+@import "tailwindcss";
+@import "flowbite/src/themes/default";
+@plugin "flowbite/plugin";
+@source "../node_modules/flowbite";
 body {
   margin: 0;
   overflow: hidden;
@@ -6,27 +10,7 @@ body {
 }
 
 
-#controls {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.8);
-  padding: 10px;
-  z-index: 10;
-  backdrop-filter: blur(5px);
-}
-#controls > * {
-  user-select: none;
-  -webkit-user-select: none;
-  padding: 14px 18px;
-  font-size: 2rem;
-  flex-shrink: 0;
-}
+
 #canvas {
  
 }
@@ -44,20 +28,15 @@ body {
 
 }
 
-@media (max-width: 768px) {
-  #controls {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 6px;
-    padding: 12px;
-  }
-  #controls > * {
-    flex: 1 1 40%;
-    font-size: 16px;
-    padding: 14px;
 
-  }
+
+/* styles.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.btm-btn {
+  @apply px-4 py-2 rounded font-medium text-zinc-700  transition-colors ;
 }
-
 
 

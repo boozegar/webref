@@ -4,24 +4,61 @@
     <meta charset="UTF-8"/>
     <link rel="icon" type="image/svg+xml" href="/vite.svg"/>
     <!--      禁用移动端双击缩放-->
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
     <title>Vite App</title>
 </head>
 <script type="module" src="/src/main.js"></script>
 <body>
-<div id="controls">
-    <input type="file" id="fileInput" accept="image/*" multiple>
-    <button id="flipAll">水平反转</button>
-    <button id="toggleGrayscale">黑白灰</button>
-    <!--    <button id="resetCanvas">还原画布</button>-->
+
+
+<div
+        id="modalEl"
+        tabindex="-1"
+        aria-hidden="true"
+        class="fixed left-0 right-0 top-0 z-50 hidden h-[calc(100%-1rem)] max-h-full w-full overflow-y-auto overflow-x-hidden p-4 md:inset-0 select-none"
+>
+
+    <div class="relative   m-auto">
+        <!-- Modal content -->
+        <div class="relative rounded-lg  ">
+            <!-- Modal body -->
+            <div class="flex space-6 p-6 mx-auto  justify-center items-center">
+                <button id="flip"
+                        type="button"
+                        class="p-3  mx-2 bg-black text-white font-bold">水平反转
+                </button>
+                <button id="del"
+                        type="button"
+                        class="p-3 mx-2 bg-black text-white font-bold">删除
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
-<div  id="img-menu">
-    <button id="flip">水平反转</button>
-    <button id="del">删除</button>
+
+
+<div id="canvas" class="select-none"></div>
+
+<div class="fixed bottom-0 left-0 z-50 w-full  bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600">
+
+    <div
+            class="flex items-center justify-center md:order-2 space-x-1 md:space-x-2 rtl:space-x-reverse bg-zinc-100 ">
+        <label
+                class="btm-btn"
+               for="fileInput">选择图片</label>
+        <input id="fileInput" accept="image/*" type="file"
+               class="hidden" multiple
+        >
+        <button id="flipAll"
+                class="btm-btn">
+            水平反转
+        </button>
+        <button id="toggleGrayscale"
+                class="btm-btn">
+            黑白灰
+        </button>
+    </div>
 </div>
-
-<div id="canvas"></div>
-
-
 </body>
 </html>

@@ -1,16 +1,53 @@
 import './style.css'
 import interact from 'interactjs'
-
+import {Modal} from 'flowbite';
 
 const canvas = document.getElementById('canvas');
 const fileInput = document.getElementById('fileInput');
 const flipAllBtn = document.getElementById('flipAll');
+const flipOneBtn = document.getElementById('flip');
+const delOneBtn = document.getElementById('del');
 const grayscaleBtn = document.getElementById('toggleGrayscale');
+
 const resetCanvasBtn = document.getElementById('resetCanvas');
 
 let allFlipped = false;
 let allGrayscale = false;
 const imageStates = new WeakMap();
+
+
+// set the modal menu element
+const $targetEl = document.getElementById('modalEl');
+
+// options with default values
+const options = {
+    placement: 'bottom-right',
+    backdrop: 'dynamic',
+    backdropClasses: 'bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40',
+    closable: true,
+    onHide: () => {
+        console.log('modal is hidden');
+    },
+    onShow: () => {
+        console.log('modal is shown');
+    },
+    onToggle: () => {
+        console.log('modal has been toggled');
+    },
+};
+
+// instance options object
+const instanceOptions = {
+    id: 'modalEl', override: true
+};
+
+
+/*
+ * $targetEl: required
+ * options: optional
+ */
+const modal = new Modal($targetEl, options, instanceOptions);
+
 
 function applyTransform(wrapper, state) {
     const scaleX = state.flipped ? -state.scale : state.scale;
@@ -19,10 +56,17 @@ function applyTransform(wrapper, state) {
     img.style.filter = state.grayscale ? 'grayscale(100%)' : 'none';
 }
 
-function showMenu(wrapper, state){
-    alert(state)
+// modal.show();
+
+function showMenu(wrapper, state) {
+    menuElState.cur_wrapper = wrapper;
+    menuElState.cur_state = state
+    modal.show();
 }
 
+const menuElState = {
+    cur_wrapper: null, cur_state: null
+}
 
 
 fileInput.addEventListener('change', (e) => {
@@ -90,6 +134,24 @@ flipAllBtn.addEventListener('click', () => {
     });
 });
 
+flipOneBtn.addEventListener('click', () => {
+    let wrapper = menuElState.cur_wrapper;
+    let s = menuElState.cur_state
+    s.flipped = !s.flipped;
+    applyTransform(wrapper, s);
+    wrapper = undefined
+    modal.hide();
+});
+
+delOneBtn.addEventListener('click', () => {
+    let wrapper = menuElState.cur_wrapper;
+    let s = menuElState.cur_state
+    canvas.removeChild(wrapper)
+    wrapper = undefined
+    modal.hide();
+});
+
+
 grayscaleBtn.addEventListener('click', () => {
     allGrayscale = !allGrayscale;
     document.querySelectorAll('.image-wrapper').forEach(wrapper => {
@@ -109,8 +171,7 @@ interact(canvas).gesturable({
             if (!event.target.closest('.image-wrapper')) {
                 scaleCanvas = true;
             }
-        },
-        move(event) {
+        }, move(event) {
             if (scaleCanvas) {
                 document.querySelectorAll('.image-wrapper').forEach(wrapper => {
                     const s = imageStates.get(wrapper);
@@ -119,8 +180,7 @@ interact(canvas).gesturable({
                     applyTransform(wrapper, s);
                 });
             }
-        },
-        end() {
+        }, end() {
             scaleCanvas = false;
         }
     }
